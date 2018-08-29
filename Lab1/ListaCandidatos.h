@@ -65,8 +65,9 @@ class ListaCandidatos{
 			NoCandidato* it = head;
 			while(it->next!= NULL){
 				if(it->next->conteudo->igual(nome,sobrenome)){
-					//it->next = new NoCandidato(it->next->next->conteudo,NULL);
+					NoCandidato* aux = it->next;
 					it->next = it->next->next;
+					delete aux;
 					return true;
 					}
 					it = it->next;
