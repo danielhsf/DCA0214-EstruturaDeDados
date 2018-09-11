@@ -40,8 +40,10 @@ class State {
     State(vector<int>& p) {
         //pos = new int[p.size()];
         int tam = p.size();
-        for (int i = 0; i < tam; i++)
+        for (int i = 0; i < tam; i++){
             pos.push_back(p[i]);
+            //cout << p[i] << endl;
+        }
         prev = NULL;
     }
 
@@ -49,12 +51,14 @@ class State {
      * constrói um estado obtido a partir de s deslocando-se o veículo c de d (-1 ou +1)
      */
     State(State* s, int c, int d) {
-        // A SER COMPLETADO
+        pos = s->pos;
+        pos[c] = pos[c] + d;
+        prev = s;
     }
 
     // nós ganhamos?
     bool success() {
-        return true; // A SER COMPLETADO
+        return pos[0] == 4; 
     }
 
     bool equals(State* s) {
@@ -72,17 +76,9 @@ class State {
     
 };
 
-
-
-
-
 //necessário para uso de hash_set
-
-
-
 //função hash
-struct hash_state
-{
+struct hash_state{
    size_t operator()(const State* t) const
    {
      int h = 0;
@@ -95,8 +91,7 @@ struct hash_state
 };
 
 //função igualdade para hash_set
-struct eq_state
-{
+struct eq_state{
    bool operator()(const State* t1, const State* t2) const {
        
        if(t1->pos.size() != t2->pos.size()) return false;
@@ -142,7 +137,22 @@ class RushHour {
     bool free[6][6];
 
     void initFree(State* s) {
-        // A SER COMPLETADA
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 6; j++) {
+                free[i][j] = true;
+            }
+        }
+        for (int i = 0; i < nbcars; i++) {
+            if (horiz[i]) {
+                // está na horizontal
+                for (int j = 0; j < len[i]; j++)
+                    free[moveon[i]][s->pos[i] + j] = false;
+            } else {
+                // está na vertical
+                for (int j = 0; j < len[i]; j++)
+                    free[s->pos[i] + j][moveon[i]] = false;
+            }
+        }
     }
 
     /*
@@ -152,7 +162,51 @@ class RushHour {
     list<State*> moves(State* s) {
         initFree(s);
         list<State*> l;
-        // A SER COMPLETADA
+        
+        for (int i = 0; i < nbcars; i++) {
+            int carPos = s->pos[i];
+            int carLen = len[i];
+            bool carHoriz = horiz[i];
+
+            if (carHoriz) {
+                // está na horizontal
+                if (carPos == 0) {
+                    if (free[moveon[i]][carPos + carLen]) {
+                        l.push_back(new State(s, i, 1));
+                    }
+                } else if (carPos == 5) {
+                    if (free[moveon[i]][carPos - 1]) {
+                        l.push_back(new State(s, i, -1));
+                    }
+                } else {
+                    if (free[moveon[i]][carPos - 1]) {
+                        l.push_back(new State(s, i, -1));
+                    }                    
+                    if (free[moveon[i]][carPos + carLen]) {
+                        l.push_back(new State(s, i, 1));
+                    }
+                }
+            } else {
+                // está na vertical
+                if (carPos == 0) {
+                    if (free[carPos + carLen][moveon[i]]) {
+                        l.push_back(new State(s, i, 1));
+                    }
+                } else if (carPos == 5) {
+                    if (free[carPos - 1][moveon[i]]) {
+                        l.push_back(new State(s, i, -1));
+                    }
+                } else {
+                    if (free[carPos - 1][moveon[i]]) {
+                        l.push_back(new State(s, i, -1));
+                    }                    
+                    if (free[carPos + carLen][moveon[i]]) {
+                        l.push_back(new State(s, i, 1));
+                    }
+                }
+            }
+        }
+
         return l;
     }
 
@@ -177,11 +231,62 @@ class RushHour {
     void printSolution(State* s) {
         // A SER COMPLETADO
     }
+    void test2() {
+        nbcars = 8; 
+        bool horiz1[] = {true, true, false, false, true, true, false, false};
 
+        horiz.assign(horiz1, horiz1+8);
+        int len1[] = {2,2,3,2,3,2,3,3};
+        len.assign(len1,len1+8);
+
+        int moveon1[] = {2,0,0,0,5,4,5,3};
+        moveon.assign(moveon1,moveon1+8);
+
+        int start1[] = {1,0,1,4,2,4,0,1};
+        vector<int> start(start1,start1+8);
+        State* s = new State(start);
+        initFree(s);
+
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 6; j++){
+                cout << free[i][j] << "\t";
+                //cout << free[i][j] << endl;
+            }              
+            cout << endl;
+        }
+    }
+
+    void test3(){
+        nbcars = 12;
+        bool horiz1[] = {true, false, true, false, false, true, false, true, false, true, false, true};
+        
+        horiz.assign(horiz1, horiz1+nbcars);
+        int len1[] = {2,2,3,2,3,2,2,2,2,2,2,3};
+        len.assign(len1,len1+12);
+        int moveon1[] = {2,2,0,0,3,1,1,3,0,4,5,5};
+        moveon.assign(moveon1,moveon1+nbcars);
+
+        int start1[] = {1,0,3,1,1,4,3,4,4,2,4,1};
+        vector<int> start(start1,start1+nbcars);
+
+        State* s = new State(start);
+        int start02[] = {1,0,3,1,1,4,3,4,4,2,4,2};
+        vector<int> start2(start02,start02+nbcars);
+
+        State* s2 = new State(start2);
+
+        int n = 0;
+        for (list<State*> L = moves(s); !L.empty(); n++) 
+            L.pop_front();
+
+        cout << n << endl;
+        n = 0;
+
+        for (list<State*> L = moves(s2); !L.empty(); n++) 
+            L.pop_front();
+        cout << n << endl;
+    }
 };
-
-
-
 
 void test1() {
 	
@@ -212,9 +317,8 @@ void test1() {
 	cout << (s->success()) << endl;
 }
 
-
-
 int main(){
-	
+	RushHour* rush = new RushHour();
+    rush->test3();
 	return 0;
 	}
