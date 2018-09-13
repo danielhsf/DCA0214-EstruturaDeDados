@@ -54,6 +54,9 @@ class State {
         pos = s->pos;
         pos[c] = pos[c] + d;
         prev = s;
+
+        this->c = c;
+        this->d = d;
     }
 
     // nós ganhamos?
@@ -247,7 +250,36 @@ class RushHour {
      */
   
     void printSolution(State* s) {
-        // A SER COMPLETADO
+        int deslocamentos = 0;
+        std::list<State*> states;
+        for (State* cs = s; cs->prev != NULL; cs = cs->prev) {
+            deslocamentos++;
+            states.push_front(cs);
+        }
+        printf("%d deslocamentos\n", deslocamentos);
+        while (states.front() != NULL) {
+            State* currentState = states.front();
+            states.pop_front();
+
+            string cor = color[currentState->c];
+            string direcao = "";
+
+            if (horiz[currentState->c]) {
+                if (currentState->d > 0) {
+                    direcao = "a direita";
+                } else {
+                    direcao = "a esquerda";
+                }
+            } else {
+                if (currentState->d > 0) {
+                    direcao = "baixo";
+                } else {
+                    direcao = "cima";
+                }
+            }
+
+            printf("veiculo %s para %s\n", cor.c_str(), direcao.c_str());
+        }
     }
 
     void test2() {
@@ -329,6 +361,28 @@ class RushHour {
         for (s = solve(s); s->prev != NULL; s = s->prev) n++;
         cout << n << endl;
     }
+
+    void solve22() {
+        nbcars = 12;
+
+        string color1[] = {"vermelho","verde claro","amarelo","laranja","violeta claro","azul ceu","rosa","violeta","verde","preto","bege","azul"};
+        color.assign(color1, color1+nbcars);
+
+        bool horiz1[] = {true, false, true, false, false, true, false,true, false, true, false, true};
+        horiz.assign(horiz1, horiz1+nbcars);
+
+        int len1[] = {2,2,3,2,3,2,2,2,2,2,2,3};
+        len.assign(len1,len1+nbcars);
+
+        int moveon1[] = {2,2,0,0,3,1,1,3,0,4,5,5};
+        moveon.assign(moveon1,moveon1+nbcars);
+
+        int start1[] = {1,0,3,1,1,4,3,4,4,2,4,1};
+        vector<int> start(start1,start1+nbcars);
+        
+        State* s = new State(start);
+        s = solve(s);printSolution(s);
+    }
 };
 
 void test1() {
@@ -362,6 +416,6 @@ void test1() {
 
 int main(){
 	RushHour* rush = new RushHour();
-    rush->test4();
+    rush->solve22();
 	return 0;
 }
