@@ -84,7 +84,7 @@ struct hash_state{
      int h = 0;
      
      for (int i = 0; i < t->pos.size(); i++)
-            h = 37 * h + t->pos[i];
+        h = 37 * h + t->pos[i];
      
      return h;
    }
@@ -216,11 +216,29 @@ class RushHour {
     State* solve(State* s) {
         hash_set<State*,hash_state,eq_state> visited;
         visited.insert(s);
+
         queue<State*> Q;
         Q.push(s);
+
         while (!Q.empty()) {
-            // A SER COMPLETADO
+            State* currentState = Q.front();
+            Q.pop();
+
+            if (currentState->success())
+                return currentState;
+            
+            list<State*> l = moves(currentState);
+            while (!l.empty()) {
+                State* state_ins = l.back();
+                l.pop_back();
+
+                if (visited.count(state_ins) == 0) {
+                    visited.insert(state_ins);
+                    Q.push(state_ins);
+                }
+            }
         }
+
         cerr << "sem solução" << endl; exit(1);
     }
 
@@ -231,6 +249,7 @@ class RushHour {
     void printSolution(State* s) {
         // A SER COMPLETADO
     }
+
     void test2() {
         nbcars = 8; 
         bool horiz1[] = {true, true, false, false, true, true, false, false};
@@ -286,6 +305,30 @@ class RushHour {
             L.pop_front();
         cout << n << endl;
     }
+
+    void test4() {
+        nbcars = 12;
+
+        string color1[] = {"vermelho","verde claro","amarelo","laranja", "violeta claro","azul ceu","rosa","violeta","verde","preto","bege","azul"};
+        color.assign(color1, color1+nbcars);
+
+        bool horiz1[] = {true, false, true, false, false, true, false, true, false, true, false, true};
+        horiz.assign(horiz1, horiz1+nbcars);
+
+        int len1[] = {2,2,3,2,3,2,2,2,2,2,2,3}; len.assign(len1,len1+nbcars);
+        int moveon1[] = {2,2,0,0,3,1,1,3,0,4,5,5};
+
+        moveon.assign(moveon1,moveon1+nbcars);
+
+        int start1[] = {1,0,3,1,1,4,3,4,4,2,4,1};
+
+        vector<int> start(start1,start1+nbcars);
+        State* s = new State(start);
+
+        int n = 0;
+        for (s = solve(s); s->prev != NULL; s = s->prev) n++;
+        cout << n << endl;
+    }
 };
 
 void test1() {
@@ -319,6 +362,6 @@ void test1() {
 
 int main(){
 	RushHour* rush = new RushHour();
-    rush->test3();
+    rush->test4();
 	return 0;
-	}
+}
