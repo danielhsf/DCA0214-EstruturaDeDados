@@ -5,6 +5,7 @@
  */
 package lab4;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -16,35 +17,51 @@ public class Pilha<T> {
     
     private final LinkedList<T> pilha;
     
-    public Pilha() {
+    Pilha() {
         pilha = new LinkedList<>();
     }
     
-    public void empilha(T valor) {
+    void empilha(T valor) {
         pilha.push(valor);
     }
     
-    public T topo() {
+    T topo() {
         if (pilha.isEmpty()) {
             throw new Error("Pilha está vazia");
         }
         return pilha.getFirst();
     }
     
-    public T desempilha() {
+    T desempilha() {
         if (pilha.isEmpty()) {
             throw new Error("Pilha está vazia");
         }
         return pilha.pop();
     }
     
-    public boolean estaVazia() {
+    void reinicialize() {
+        pilha.clear();
+    }
+    
+    boolean estaVazia() {
         return pilha.isEmpty();
     }
     
     @Override
     public String toString() {
         return pilha.toString();
+    }
+    
+    public String toStringInverse() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Historico = [");
+        
+        for (Iterator i = pilha.descendingIterator(); i.hasNext();) {
+            sb.append(i.next().toString()).append(" ");
+        }
+        
+        sb.append("]");
+        return sb.toString();
     }
     
 }
