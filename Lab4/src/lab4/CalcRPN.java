@@ -86,6 +86,16 @@ public class CalcRPN {
             case "hist":
                 System.out.println(hist.toStringInverse());
                 break;
+            case "undo":
+                Operacao op = hist.desempilha();
+                aPilha.desempilha();
+                
+                if (op.getCode() != 'e') {
+                    aPilha.empilha(op.getB());
+                    aPilha.empilha(op.getA());
+                }
+                
+                break;
             default:
                 double valor = Double.parseDouble(cmd);
                 aPilha.empilha(valor);
