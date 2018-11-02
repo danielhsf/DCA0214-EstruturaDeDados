@@ -11,35 +11,98 @@ package lab4;
  */
 public class CalcRPN {
     
-    Pilha<Double> aPilha;
+    final Pilha<Double> aPilha;
+    final Pilha<Operacao> hist;
     
     CalcRPN() {
         aPilha = new Pilha<>();
+        hist = new Pilha<>();
     }
     
     void mais() {
-        throw new Error("a ser completado");
+        double val2 = aPilha.desempilha();
+        double val1 = aPilha.desempilha();
+        
+        double res = val1 + val2;
+        
+        aPilha.empilha(res);
+        hist.empilha(new Operacao('+', val1, val2));
     }
     
     void menos() {
-        throw new Error("a ser completado");
+        double val2 = aPilha.desempilha();
+        double val1 = aPilha.desempilha();
+        
+        double res = val1 - val2;
+        
+        aPilha.empilha(res);
+        hist.empilha(new Operacao('-', val1, val2));
     }
     
     void vezes() {
-        throw new Error("a ser completado");
+        double val2 = aPilha.desempilha();
+        double val1 = aPilha.desempilha();
+        
+        double res = val1 * val2;
+        
+        aPilha.empilha(res);
+        hist.empilha(new Operacao('*', val1, val2));
     }
     
     void dividido() {
-        throw new Error("a ser completado");
+        double val2 = aPilha.desempilha();
+        double val1 = aPilha.desempilha();
+        
+        double res = val1 / val2;
+        
+        aPilha.empilha(res);
+        hist.empilha(new Operacao('/', val1, val2));
     }
     
     Double resultado() {
-        throw new Error("a ser completado");
+        return aPilha.topo();
     }
     
     // Interpretador de comandos
     void exec(String cmd) {
-        throw new Error("a ser completado");
+        
+        switch(cmd) {
+            case "+":
+                mais();
+                break;
+            case "-":
+                menos();
+                break;
+            case "*":
+                vezes();
+                break;
+            case "/":
+                dividido();
+                break;
+            case "clear":
+                aPilha.reinicialize();
+                hist.reinicialize();
+                break;
+            case "hist":
+                System.out.println(hist.toStringInverse());
+                break;
+            case "undo":
+                Operacao op = hist.desempilha();
+                aPilha.desempilha();
+                
+                if (op.getCode() != 'e') {
+                    aPilha.empilha(op.getB());
+                    aPilha.empilha(op.getA());
+                }
+                
+                break;
+            default:
+                double valor = Double.parseDouble(cmd);
+                aPilha.empilha(valor);
+                hist.empilha(new Operacao(valor));
+                break;
+        }
+        
     }
     
 }

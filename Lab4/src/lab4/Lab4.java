@@ -5,6 +5,10 @@
  */
 package lab4;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 /**
  *
  * @author mateus
@@ -13,10 +17,13 @@ public class Lab4 {
 
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // test1();
-        test2();
+        // test2();
+        // test3();
+        interfaceUsuario();
     }
     
     static void test1() {
@@ -70,4 +77,67 @@ public class Lab4 {
         System.out.println(aPilha);
     }
     
+    static void test3() {
+        CalcRPN calc = new CalcRPN();
+        
+        System.out.print("3 2 + = ");
+        calc.aPilha.empilha(3.0);
+        calc.aPilha.empilha(2.0);
+        calc.mais();
+        System.out.println(calc.resultado());
+        
+        calc = new CalcRPN();
+        System.out.print("3 2 - = ");
+        calc.aPilha.empilha(3.0);
+        calc.aPilha.empilha(2.0);
+        calc.menos();
+        System.out.println(calc.resultado());
+        
+        calc = new CalcRPN();
+        System.out.print("3 2 * = ");
+        calc.aPilha.empilha(3.0);
+        calc.aPilha.empilha(2.0);
+        calc.vezes();
+        System.out.println(calc.resultado());
+        
+        calc = new CalcRPN();
+        System.out.print("3 2 / = ");
+        calc.aPilha.empilha(3.0);
+        calc.aPilha.empilha(2.0);
+        calc.dividido();
+        System.out.println(calc.resultado());
+        
+        calc = new CalcRPN();
+        System.out.print("1 2 + 3 4 - / 10 3 - * = ");
+        calc.aPilha.empilha(1.0);
+        calc.aPilha.empilha(2.0);
+        calc.mais();
+        calc.aPilha.empilha(3.0);
+        calc.aPilha.empilha(4.0);
+        calc.menos();
+        calc.dividido();
+        calc.aPilha.empilha(10.0);
+        calc.aPilha.empilha(3.0);
+        calc.menos();
+        calc.vezes();
+        System.out.println(calc.resultado());
+    }
+    
+    static void interfaceUsuario() throws IOException {
+        CalcRPN calc = new CalcRPN();
+        
+        String line;
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        
+        while ((line = reader.readLine()) != null) {
+            if (line.isEmpty()) {
+                continue;
+            }
+            for (String s : line.split(" ")) {
+                calc.exec(s);
+            }
+            System.out.println("Pilha = " + calc.aPilha);
+        }
+        System.out.println("Até logo");
+    }
 }
