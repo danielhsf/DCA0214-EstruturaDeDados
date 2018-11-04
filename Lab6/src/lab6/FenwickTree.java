@@ -113,6 +113,10 @@ public class FenwickTree {
         return valor;
     }
 
+    public int between(int lo, int hi) {
+
+        return prefixSum(hi) - prefixSum(lo);
+    }
 
         
     @Override
