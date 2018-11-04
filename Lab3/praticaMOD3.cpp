@@ -416,6 +416,10 @@ void test1() {
 
 int main(){
 	RushHour* rush = new RushHour();
+    test1();
+    rush->test2();
+    rush->test3();
+    rush->test4();
     rush->solve22();
 	return 0;
 }

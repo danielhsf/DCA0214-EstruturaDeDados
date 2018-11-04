@@ -69,7 +69,19 @@ public class FenwickTree {
     }
     
     public void increment(int i, int delta) {
-        
+        FenwickTree aux = this;
+        int leftplaces = aux.leftSize;
+        while(aux.leftSize != 0){
+            if(leftplaces > i){
+                aux = aux.left;
+                leftplaces = aux.leftSize;
+            }else{
+                aux = aux.right;
+                leftplaces = leftplaces + aux.leftSize;
+            }
+        }
+        aux.value = delta;
+        this.value = sumValues();
     }
         
     @Override
