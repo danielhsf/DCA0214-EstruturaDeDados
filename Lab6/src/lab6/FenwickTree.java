@@ -83,6 +83,37 @@ public class FenwickTree {
         aux.value = delta;
         this.value = sumValues();
     }
+
+    public int prefixSum(int i) {
+        if(i == 0){
+            return 0;
+        }
+        FenwickTree aux = this;
+        int indice = aux.leftSize;
+        int valor = aux.value;
+        while(indice != i){
+            if(indice > i){
+                valor = valor - aux.right.value;
+                aux = aux.left;
+                indice = aux.leftSize;
+            }else{
+                aux = aux.right;
+                indice = indice +  aux.leftSize;
+                if(aux.leftSize == 0){
+                    indice +=1;
+                }
+                //valor = valor - aux.right.value;
+            }
+        }
+        
+        if(aux.leftSize != 0){
+            valor = valor - aux.right.value;
+        }
+        
+        return valor;
+    }
+
+
         
     @Override
     public String toString() {

@@ -16,7 +16,7 @@ public class Lab6 {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        test4();
+        test5();
     }
     
     public static void test1() {
@@ -74,4 +74,18 @@ public class Lab6 {
         System.out.println("Resultado de increment(5, 1) : " + T);
     }
     
+    public static void test5(){
+        // teste de correcao
+        System.out.println("Verificacao de correcao da funcao...");
+        FenwickTree T = new FenwickTree(3, new FenwickTree(1, new FenwickTree(4),
+        new FenwickTree(1, new FenwickTree(2), new FenwickTree(5))),
+        new FenwickTree(1, new FenwickTree(3),
+        new FenwickTree(1, new FenwickTree(6), new FenwickTree(1))));
+        System.out.println("Arvore this : " + T);
+        System.out.println("Soma das primeiras folhas : ");
+        for(int upto = 0; upto <= 6; upto++){
+        System.out.println("prefixSum(" + upto + ") : " + T.prefixSum(upto));
+        }
+    }
+
 }
