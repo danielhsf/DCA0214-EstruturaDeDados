@@ -1,6 +1,5 @@
 // Arvore Binaria 
 #include <iostream>
-#include <tuple>
 
 using namespace std;
 
@@ -63,7 +62,7 @@ struct resultadodabusca* Buscar(struct No* arvore, int x, int f){
       }
 }
 
-/* Inorder traversal of a binary tree*/
+
 void inorder(struct No* temp) 
 { 
     if (!temp) 
@@ -82,15 +81,29 @@ void insertion(int x,struct No* arvore, int f)
         cout << " árvore vazia" << endl;
         arvore = newnode;
     }else if(testando->f == 1){
-        cout << "chave encontrada e pt aponta para nó onde a chave se encontra " << endl;
+        cout << "Elemento ja existe " << endl;
     }else if(testando->f == 2){
-        cout << "chave não encontrada e pt aponta para nó cuja árvore esquerda é vazia" << endl;
         testando->pt->esq = newnode;
     }else if(testando->f == 3){
-        cout << "chave não encontrada e pt aponta para nó cuja árvore direita é vazia" << endl;
         testando->pt->dir = newnode;
     }
 } 
+
+void remove(int x,struct No* arvore){
+  struct resultadodabusca *testando = Buscar(arvore,x,0);
+  struct No *key_node = NULL;
+  if(testando->f == 1){
+        if(testando->pt->esq == NULL and testando->pt->dir == NULL){ 
+            delete testando->pt; 
+        }else if(testando->pt->esq != NULL and testando->pt->dir == NULL){
+            testando->pt = testando->pt->esq;
+        }else if(testando->pt->esq == NULL and testando->pt->dir != NULL){
+            testando->pt = testando->pt->dir;
+        }else{
+            
+        }
+    }
+}
 
 int main() 
 { 
@@ -109,24 +122,28 @@ int main()
     topo->esq->dir = novoNo(9);
     topo->dir->esq = novoNo(15);
     topo->dir->dir = novoNo(25);
+    cout << "Arvore :" << endl;
+    inorder(topo);
+    cout << endl;
+    cout << "Procurando 10" << endl;
     struct resultadodabusca *testando = Buscar(topo,10,0);
-    cout << testando->f <<endl;
     if(testando->f == 0){
-        cout << " árvore vazia" << endl;
+        cout << "Árvore vazia" << endl;
     }else if(testando->f == 1){
-        cout << "chave encontrada e pt aponta para nó onde a chave se encontra " << endl;
-        cout << testando->f << endl;
-        cout << testando->pt->n << endl;
-        cout << testando->pt->dir->n << endl;
+        cout << testando->pt->n << " encontrado e pt aponta para nó onde a chave se encontra " << endl;
     }else if(testando->f == 2){
         cout << "chave não encontrada e pt aponta para nó cuja árvore esquerda é vazia" << endl;
     }else if(testando->f == 3){
         cout << "chave não encontrada e pt aponta para nó cuja árvore direita é vazia" << endl;
     }
-    inorder(topo);
     cout << endl;
+    cout << "Inserindo 5 :";
     insertion(5,topo,0);
     cout << endl;
+    inorder(topo);
+    cout << endl; 
+    cout << "Removendo 5 da Arvore :" << endl;
+    remove(5,topo);
     inorder(topo);
     cout << endl;
 	return 0; 
